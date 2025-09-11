@@ -1,7 +1,14 @@
 import express from "express";
+import connectDB from "./database";
+
+
+const PORT = process.env.PORT || 8000;
 
 const app = express();
+app.use(express.json());
 
-app.listen(8000, () => {
-  console.log("Server is running on port 8000");
+connectDB();
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
