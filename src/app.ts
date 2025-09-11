@@ -1,6 +1,6 @@
 import express from "express";
 import { connectToDatabase } from "./database";
-import signupRouter from "./routes/signup";
+import signupRouter from "./api/signup/signup.router";
 
 const PORT = process.env.PORT || 8000;
 
