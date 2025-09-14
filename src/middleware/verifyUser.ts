@@ -1,22 +1,37 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../config/setting";
+import { User } from "../models/users";
 
-export function authorize(req: Request, res: Response, next: NextFunction) {
-  const header = req.headers.authorization;
-  if (!header) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
-
-  const [scheme, token] = header.split(' ');
-  if (scheme !== 'Bearer' || !token) {
-    return res.status(401).json({ message: 'Invalid auth format' });
-  }
-
+export const authorization = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!);
-    (req as any).user = payload;
-    return next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    const header = req.headers.authorization;
+    if (!header) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const [scheme, token] = header?.split(" ")  || [];
+    if (scheme !== "Bearer" || !token) {
+      return res.status(401).json({ message: "Invalid auth format" });
+    }
+    try {
+      const decodeToken: any = jwt.verify(token, JWT_SECRET);
+      const { _id } = decodeToken;
+      const user = await User.findById(_id);
+      if (!user) {
+        return next({ status: 401, message: "not authorized" });
+      }
+      req.user = user;
+      next();
+    } catch (err) {
+      res.status(401).json({ message: "Invalid or expired token" });
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
   }
-}
+};

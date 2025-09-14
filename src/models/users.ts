@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 
 const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
@@ -13,4 +13,6 @@ const userSchema = new Schema({
   ingredients: { type: [Schema.Types.ObjectId], ref: "Ingredient", required: false },
 });
 
+export type UserAttrs = InferSchemaType<typeof userSchema>;
+export type UserDoc = HydratedDocument<UserAttrs>;
 export const User = mongoose.model("User", userSchema);

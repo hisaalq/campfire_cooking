@@ -8,8 +8,9 @@
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
-    "target": "esnext",
-    "types": [],
+      "target": "esnext",
+      "types": [ "express", "node" ],
+    "typeRoots": ["./src/@types", "./node_modules/@types", "./types"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
