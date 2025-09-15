@@ -47,12 +47,3 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
       next(err);
   }
 };
-
-export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const user = await User.findById((req as any).user.id);
-    res.status(200).json(user);
-  } catch (err) {
-    next(err);
-  }
-};
