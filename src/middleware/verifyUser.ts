@@ -14,7 +14,7 @@ export const authorization = async (
       return res.status(401).json({ message: "No token provided" });
     }
 
-    const [scheme, token] = header?.split(" ")  || [];
+    const [scheme, token] = header?.split(" ") || [];
     if (scheme !== "Bearer" || !token) {
       return res.status(401).json({ message: "Invalid auth format" });
     }
