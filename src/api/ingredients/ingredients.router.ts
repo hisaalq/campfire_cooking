@@ -20,9 +20,9 @@ const ingredientsRouter = Router();
 // ===== INGREDIENT ROUTES =====
 ingredientsRouter.get("/", getIngredients);
 ingredientsRouter.get("/:id", getIngredientById);
-ingredientsRouter.post("/", createIngredient);
-ingredientsRouter.put("/:id", updateIngredient);
-ingredientsRouter.delete("/:id", deleteIngredient);
+ingredientsRouter.post("/", authorization, createIngredient);
+ingredientsRouter.put("/:id", authorization, updateIngredient);
+ingredientsRouter.delete("/:id", authorization, deleteIngredient);
 
 // ===== CATEGORY ROUTES =====
 ingredientsRouter.get("/categories", getCategories);
