@@ -10,8 +10,6 @@ import {
   getCategories,
   getCategoryById,
   createCategory,
-  updateCategory,
-  deleteCategory,
 } from "./ingredients.controller";
 import { authorization } from "../../middleware/verifyUser";
 
@@ -28,7 +26,5 @@ ingredientsRouter.delete("/:id", authorization, deleteIngredient);
 ingredientsRouter.get("/categories", getCategories);
 ingredientsRouter.get("/categories/:id", getCategoryById);
 ingredientsRouter.post("/categories", authorization, createCategory);
-ingredientsRouter.put("/categories/:id", authorization, updateCategory);
-ingredientsRouter.delete("/categories/:id", authorization, deleteCategory);
 
 export default ingredientsRouter;

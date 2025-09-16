@@ -301,14 +301,6 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCategory = async (req: Request, res: Response) => {
-  // ... your existing updateCategory code
-};
-
-export const deleteCategory = async (req: Request, res: Response) => {
-  // ... your existing deleteCategory code
-};
-
 export const getCategoryById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
