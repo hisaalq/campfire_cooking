@@ -13,15 +13,16 @@ export const authorization = async (
     if (!header) {
       return res.status(401).json({ message: "No token provided" });
     }
+    const [scheme, token] = header.split(" ");
 
-    const [scheme, token] = header?.split(" ") || [];
     if (scheme !== "Bearer" || !token) {
       return res.status(401).json({ message: "Invalid auth format" });
     }
+
     try {
       const decodeToken: any = jwt.verify(token, JWT_SECRET);
-      const { _id } = decodeToken;
-      const user = await User.findById(_id);
+      const { id } = decodeToken;
+      const user = await User.findById(id);
       if (!user) {
         return next({ status: 401, message: "not authorized" });
       }
@@ -31,6 +32,7 @@ export const authorization = async (
       res.status(401).json({ message: "Invalid or expired token" });
     }
   } catch (error) {
+    console.log("authorization error");
     console.log(error);
     next(error);
   }
