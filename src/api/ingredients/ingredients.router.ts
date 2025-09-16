@@ -1,19 +1,34 @@
 import { Router } from "express";
 import {
+  // Ingredient endpoints
   getIngredients,
   getIngredientById,
   createIngredient,
   updateIngredient,
   deleteIngredient,
+  // Category endpoints
+  getCategories,
+  getCategoryById,
+  createCategory,
+  updateCategory,
+  deleteCategory,
 } from "./ingredients.controller";
+import { authorization } from "../../middleware/verifyUser";
 
 const ingredientsRouter = Router();
 
-// All routes are public (no authentication required)
+// ===== INGREDIENT ROUTES =====
 ingredientsRouter.get("/", getIngredients);
 ingredientsRouter.get("/:id", getIngredientById);
 ingredientsRouter.post("/", createIngredient);
 ingredientsRouter.put("/:id", updateIngredient);
 ingredientsRouter.delete("/:id", deleteIngredient);
+
+// ===== CATEGORY ROUTES =====
+ingredientsRouter.get("/categories", getCategories);
+ingredientsRouter.get("/categories/:id", getCategoryById);
+ingredientsRouter.post("/categories", authorization, createCategory);
+ingredientsRouter.put("/categories/:id", authorization, updateCategory);
+ingredientsRouter.delete("/categories/:id", authorization, deleteCategory);
 
 export default ingredientsRouter;
