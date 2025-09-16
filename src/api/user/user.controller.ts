@@ -57,3 +57,18 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const loginuser = await User.findOne(signin(req, res, next));
+    if (!loginuser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    const { username, email, password, image, bio, created_recipes, followers, following, saved_recipes, ingredients } = req.body;
+    const updateduser = await User.findByIdAndUpdate(loginuser._id, { username, email, password, image, bio, created_recipes, followers, following, saved_recipes, ingredients }, { new: true });
+    res.status(200).json({ message: "Profile updated successfully", updateduser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
