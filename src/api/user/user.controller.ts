@@ -74,8 +74,6 @@ export const signin = async (
       expiresIn: "1h",
     });
     res.status(200).json({ token });
-  } catch (err) {
-    next(err);
   }
 };
 
