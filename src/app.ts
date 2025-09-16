@@ -13,6 +13,7 @@ connectToDatabase();
 
 app.use("/api", userRouter);
 app.use("/api/signup", userRouter);
+app.use("/api/signin", userRouter);
 app.use("/api/categories", categoriesRouter);
 
 app.listen(PORT, () => {
