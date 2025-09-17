@@ -21,10 +21,10 @@ ingredientsRouter.get("/categories/:id", getCategoryById);
 ingredientsRouter.post("/categories", authorization, createCategory);
 
 // ===== INGREDIENT ROUTES =====
-ingredientsRouter.get("/", getIngredients);
+ingredientsRouter.get("/ingredients", getIngredients);
 ingredientsRouter.get("/:id", getIngredientById);
-ingredientsRouter.post("/", authorization, createIngredient);
-ingredientsRouter.put("/:id", authorization, updateIngredient);
-ingredientsRouter.delete("/:id", authorization, deleteIngredient);
+ingredientsRouter.post("/ingredients", authorization, createIngredient);
+ingredientsRouter.put("/ingredients/:id", authorization, updateIngredient);
+ingredientsRouter.delete("/ingredients/:id", authorization, deleteIngredient);
 
 export default ingredientsRouter;

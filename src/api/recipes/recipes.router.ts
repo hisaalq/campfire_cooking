@@ -5,7 +5,12 @@ import { createRecipe, getRecipeByCategory } from "./recipes.controller";
 
 const recipesRouter = Router();
 
-recipesRouter.post("/", authorization, upload.single("image"), createRecipe);
-recipesRouter.get("/:category", getRecipeByCategory);
+recipesRouter.post(
+  "/recipes",
+  authorization,
+  upload.single("image"),
+  createRecipe
+);
+recipesRouter.get("/recipes/:category", getRecipeByCategory);
 
 export default recipesRouter;
