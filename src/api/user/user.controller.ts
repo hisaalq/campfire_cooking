@@ -83,16 +83,24 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
       return res.status(400).json({ message: "User not found" });
     }
 
+    // Populate the user with all referenced data
+    const populatedUser = await User.findById(req.user._id)
+      .populate("created_recipes", "name image category prepTime cookTime")
+      .populate("followers", "username image")
+      .populate("following", "username image")
+      .populate("saved_recipes", "name image category")
+      .populate("ingredients", "name");
+
     res.status(200).json({
-      username: req.user.username,
-      email: req.user.email,
-      image: req.user.image,
-      bio: req.user.bio,
-      created_recipes: req.user.created_recipes,
-      followers: req.user.followers,
-      following: req.user.following,
-      saved_recipes: req.user.saved_recipes, 
-      ingredients: req.user.ingredients
+      username: populatedUser?.username,
+      email: populatedUser?.email,
+      image: populatedUser?.image,
+      bio: populatedUser?.bio,
+      created_recipes: populatedUser?.created_recipes,
+      followers: populatedUser?.followers,
+      following: populatedUser?.following,
+      saved_recipes: populatedUser?.saved_recipes, 
+      ingredients: populatedUser?.ingredients
     });
   } catch (error) {
     console.log(error);
@@ -111,5 +119,15 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await User.find().populate("created_recipes", "name image");
+    res.status(200).json({users});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error", error: error });
   }
 };

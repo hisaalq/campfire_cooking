@@ -10,21 +10,22 @@ import {
   getCategories,
   getCategoryById,
   createCategory,
+  getCategoriesWithIngredients,
 } from "./ingredients.controller";
 import { authorization } from "../../middleware/verifyUser";
 
 const ingredientsRouter = Router();
 
 // ===== CATEGORY ROUTES =====
-ingredientsRouter.get("/categories", getCategories);
+ingredientsRouter.get("/categories/", getCategoriesWithIngredients);
 ingredientsRouter.get("/categories/:id", getCategoryById);
 ingredientsRouter.post("/categories", authorization, createCategory);
 
 // ===== INGREDIENT ROUTES =====
-ingredientsRouter.get("/ingredients", getIngredients);
+ingredientsRouter.get("/", getIngredients);
 ingredientsRouter.get("/:id", getIngredientById);
-ingredientsRouter.post("/ingredients", authorization, createIngredient);
-ingredientsRouter.put("/ingredients/:id", authorization, updateIngredient);
-ingredientsRouter.delete("/ingredients/:id", authorization, deleteIngredient);
+ingredientsRouter.post("/", authorization, createIngredient);
+ingredientsRouter.put("/:id", authorization, updateIngredient);
+ingredientsRouter.delete("/:id", authorization, deleteIngredient);
 
 export default ingredientsRouter;

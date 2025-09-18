@@ -1,5 +1,10 @@
 import mongoose, { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 
+const recipeIngredientSchema = new Schema({
+  ingredient: { type: Schema.Types.ObjectId, ref: "Ingredient" },
+  quantity: { type: Number, required: true },
+})
+
 const recipeSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -8,21 +13,11 @@ const recipeSchema = new Schema(
     cookTime: { type: Number, required: true },
     servings: { type: Number, required: true },
     difficulty: { type: String, required: true },
-    ingredients: {
-      type: [Schema.Types.ObjectId],
-      ref: "Ingredient",
-      required: true,
-    },
-    ingredientQuantity: {
-      type: [Schema.Types.ObjectId],
-      ref: "IngredientQuantity",
-      required: true,
-    },
-    tags: { type: [Schema.Types.ObjectId], ref: "Tag", required: true },
+    ingredients: [recipeIngredientSchema],
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     steps: { type: String, required: true },
     description: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { type: String, required: false },
   },
   {
     timestamps: true,
