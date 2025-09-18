@@ -236,15 +236,48 @@ export const deleteIngredient = async (req: Request, res: Response) => {
 // ===== CATEGORY ENDPOINTS =====
 export const getCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await IngredientCategory.find({ isActive: true })
-      .select("name description icon color")
-      .sort({ name: 1 });
+    const { populate } = req.query;
+    
+    let categories;
+    
+    if (populate === 'true') {
+      // Get categories with their ingredients populated
+      categories = await IngredientCategory.find({ isActive: true })
+        .select("name description icon color")
+        .sort({ name: 1 });
+      
+      // Manually populate ingredients for each category
+      const categoriesWithIngredients = await Promise.all(
+        categories.map(async (category) => {
+          const ingredients = await Ingredient.find({ criteria: category._id })
+            .select("name allergy")
+            .sort({ name: 1 });
+          
+          return {
+            ...category.toObject(),
+            ingredients: ingredients,
+            ingredientCount: ingredients.length
+          };
+        })
+      );
+      
+      res.status(200).json({
+        success: true,
+        data: categoriesWithIngredients,
+        count: categoriesWithIngredients.length,
+      });
+    } else {
+      // Get categories without ingredients
+      categories = await IngredientCategory.find({ isActive: true })
+        .select("name description icon color")
+        .sort({ name: 1 });
 
-    res.status(200).json({
-      success: true,
-      data: categories,
-      count: categories.length,
-    });
+      res.status(200).json({
+        success: true,
+        data: categories,
+        count: categories.length,
+      });
+    }
   } catch (error) {
     console.error("Error fetching categories:", error);
     res.status(500).json({
@@ -304,6 +337,8 @@ export const createCategory = async (req: Request, res: Response) => {
 export const getCategoryById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const { populate } = req.query;
+    
     const category = await IngredientCategory.findById(id).select(
       "name description icon color"
     );
@@ -315,15 +350,68 @@ export const getCategoryById = async (req: Request, res: Response) => {
       });
     }
 
-    res.status(200).json({
-      success: true,
-      data: category,
-    });
+    if (populate === 'true') {
+      // Get ingredients for this category
+      const ingredients = await Ingredient.find({ criteria: category._id })
+        .select("name allergy")
+        .sort({ name: 1 });
+      
+      const categoryWithIngredients = {
+        ...category.toObject(),
+        ingredients: ingredients,
+        ingredientCount: ingredients.length
+      };
+      
+      res.status(200).json({
+        success: true,
+        data: categoryWithIngredients,
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        data: category,
+      });
+    }
   } catch (error) {
     console.error("Error fetching category:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch category",
+    });
+  }
+};
+
+export const getCategoriesWithIngredients = async (req: Request, res: Response) => {
+  try {
+    const categories = await IngredientCategory.find({ isActive: true })
+      .select("name description icon color")
+      .sort({ name: 1 });
+    
+    // Populate ingredients for each category
+    const categoriesWithIngredients = await Promise.all(
+      categories.map(async (category) => {
+        const ingredients = await Ingredient.find({ criteria: category._id })
+          .select("name allergy")
+          .sort({ name: 1 });
+        
+        return {
+          ...category.toObject(),
+          ingredients: ingredients,
+          ingredientCount: ingredients.length
+        };
+      })
+    );
+    
+    res.status(200).json({
+      success: true,
+      data: categoriesWithIngredients,
+      count: categoriesWithIngredients.length,
+    });
+  } catch (error) {
+    console.error("Error fetching categories with ingredients:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch categories with ingredients",
     });
   }
 };
